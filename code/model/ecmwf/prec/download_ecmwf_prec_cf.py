@@ -9,9 +9,13 @@ available for the verification later.
 from subprocess import call # This library needed to make system call
 from ecmwfapi import ECMWFDataServer # Load the ECMWF API library
 server = ECMWFDataServer()
- 
+
 # Define data folder
-dest_dir = '../../../../data/model/ecmwf/prec/' 
+dest_dir = '../../../../data/model/ecmwf/prec/'
+
+# Remove all *cf.nc files, else grib_to_netcdf will convert with "protocol error"
+call("rm -rf " + dest_dir + "*_cf.nc", shell=True)
+ 
 # All the initial dates that have full weeks in Nov
 init_date = ['10-13','10-17','10-20','10-24','10-27','10-31','11-03','11-07','11-10','11-14','11-17','11-21','11-24']
  

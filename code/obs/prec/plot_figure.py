@@ -55,7 +55,7 @@ def plot_figure(data_0,lat_0,lon_0,start_date,end_date,month,year,index):
        name_str = 'TRMM_' + month + '_' + start_date + '-' + end_date + '_' + 'Climatology.png';
     if index == 'average':
        title_str = 'Average Rainfall';
-       name_str = 'TRMM_' + month + '_' + start_date + '-' + end_date + '_' + 'Average.png';
+       name_str = 'TRMM_' + year + month + '_' + start_date + '-' + end_date + '_' + 'Average.png';
     if index == 'anomaly':
        title_str = 'Rainfall Anomaly';
        name_str = 'TRMM_' + year + month + '_' + start_date + '-' + end_date + '_' + 'Anomaly.png';

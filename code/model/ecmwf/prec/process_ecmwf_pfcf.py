@@ -56,10 +56,10 @@ for i_date in range(0,len(init_date)):
     arr_ens_avg = np.mean(arr_comb, axis=2)
 
     # Calculate weekly totals
-    arr_wkly_ttl = np.empty([arr_shp[0], arr_shp[1]-1, arr_shp[3], arr_shp[4]])
+    arr_wkly = np.empty([arr_shp[0], arr_shp[1]-1, arr_shp[3], arr_shp[4]])
     for i in range(arr_ens_avg.shape[1]-1):
-        arr_wkly_ttl[:,i,:,:] = np.subtract(arr_ens_avg[:,i+1,:,:], arr_ens_avg[:,i,:,:]) # Substract to get weekly totals
-        arr_wkly_ttl[:,i,:,:] = arr_wkly_ttl[:,i,:,:]/7.0 # Divide by 7 for daily average
+        arr_wkly[:,i,:,:] = np.subtract(arr_ens_avg[:,i+1,:,:], arr_ens_avg[:,i,:,:]) # Substract to get weekly totals
+        arr_wkly[:,i,:,:] = arr_wkly[:,i,:,:]/7.0 # Divide by 7 for daily average
     #-------------------------------------
     # Output variable to netCDF
     #-------------------------------------
@@ -99,7 +99,7 @@ for i_date in range(0,len(init_date)):
     longitudes[:] = prec_lon
     times[:] = netCDF4.date2num(prec_time, units=times.units, calendar=times.calendar);
     steps[:] = prec_st[1:5]  
-    precip[:,:,:,:] = arr_wkly_ttl[:,:,:,:]
+    precip[:,:,:,:] = arr_wkly[:,:,:,:]
 
     # File is saved to .nc once closed
     ds_out.close()  

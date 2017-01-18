@@ -4,3 +4,8 @@
 # ignore image files
 *.jpg
 *.png
+
+# ignore data files
+*.nc
+*.grb
+*.grib

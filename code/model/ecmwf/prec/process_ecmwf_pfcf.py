@@ -39,7 +39,7 @@ for i_date in range(0,len(init_date)):
     prec_pf = ds_pf.variables['tp'][:]
     prec_cf = ds_cf.variables['tp'][:]
 
-    # Read in the array shape from pf's total precip ('tp') variable
+    # Read in the array from pf's total precip ('tp') variable
     arr_pf = prec_pf
 
     arr_shp = arr_pf.shape

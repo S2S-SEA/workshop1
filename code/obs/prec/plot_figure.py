@@ -16,7 +16,6 @@ def plot_figure(data_0,lat_0,lon_0,start_date,end_date,month,year,index):
     m = Basemap(projection='merc',llcrnrlon=loncorners[0],llcrnrlat=latcorners[0],urcrnrlon=loncorners[1],urcrnrlat=latcorners[1],resolution='h',area_thresh=10);
     m.drawmapboundary();
     m.drawcoastlines();
-    m.drawstates();
     m.drawcountries();
     parallels = np.arange(-20.,30.,10);
     m.drawparallels(parallels,labels=[1,0,0,0],fontsize=12);

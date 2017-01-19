@@ -17,12 +17,14 @@ def plot_figure(data_0,lat_0,lon_0,start_date,end_date,month,year,index):
     m.drawmapboundary();
     m.drawcoastlines();
     m.drawcountries();
+
+    #Draw parallels and meridians
     parallels = np.arange(-20.,30.,10);
     m.drawparallels(parallels,labels=[1,0,0,0],fontsize=12);
     meridians = np.arange(80.,150.,10);
     m.drawmeridians(meridians,labels=[0,0,0,1],fontsize=12);
 
-    #Change x and y axis from vectors to arrays
+    #Compute map proj coordinates
     data = data_0;
     ny = data.shape[0]; 
     nx = data.shape[1];

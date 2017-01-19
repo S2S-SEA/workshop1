@@ -10,8 +10,9 @@ from subprocess import call # This library needed to make system call
 from ecmwfapi import ECMWFDataServer # Load the ECMWF API library
 server = ECMWFDataServer()
 
-# Define data folder
+# Define data folder, and create it
 dest_dir = '../../../../data/model/ecmwf/prec/'
+call("mkdir -p " + dest_dir, shell=True)
 
 # Remove all *cf.nc files, else grib_to_netcdf will convert with "protocol error"
 call("rm -rf " + dest_dir + "*_cf.nc", shell=True)

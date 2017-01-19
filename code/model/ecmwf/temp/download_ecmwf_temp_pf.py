@@ -12,6 +12,7 @@ server = ECMWFDataServer()
  
 # Define data folder
 dest_dir = '../../../../data/model/ecmwf/temp/'
+call("mkdir -p " + dest_dir, shell=True)
 
 # Remove all *pf.nc files, else grib_to_netcdf will convert with "protocol error"
 #call("rm -rf " + dest_dir + "*_pf.nc", shell=True)

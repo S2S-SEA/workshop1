@@ -10,7 +10,7 @@ from subprocess import call # This library needed to make system call
 from ecmwfapi import ECMWFDataServer # Load the ECMWF API library
 server = ECMWFDataServer()
 
-vtype = 1 # 0: tmin, 1: tmax
+vtype = 0 # 0: tmin, 1: tmax
 vsuffx = ['tmin','tmax']
 vparam = ['122','121']
  
@@ -22,8 +22,8 @@ call("mkdir -p " + dest_dir, shell=True)
 #call("rm -rf " + dest_dir + "*_" + vsuffx[vtype] + "_*_pf.nc", shell=True)
 
 # All the initial dates that have full weeks in Nov
-#init_date = ['10-13','10-17','10-20','10-24','10-27','10-31','11-03','11-07','11-10','11-14','11-17','11-21','11-24']
-init_date = ['11-14','11-17','11-21','11-24']
+init_date = ['10-13','10-17','10-20','10-24','10-27','10-31','11-03','11-07','11-10','11-14','11-17','11-21','11-24']
+#init_date = ['11-14','11-17','11-21','11-24']
 
 # For each initial date
 for i in range(0, len(init_date)):

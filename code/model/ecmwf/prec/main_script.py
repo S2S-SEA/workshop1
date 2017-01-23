@@ -49,7 +49,6 @@ for i_date in range(0,len(model_initial_date)):
         ec_week_all = np.zeros([len(ec_lat),len(ec_lon)]);
         index = 0;
         for i_year in range(start_year,end_year+1):
-            cur_year = "%04d"%i_year;
             pre_date = ec_time[i_year-start_year] + datetime.timedelta(hours=int(ec_step[i_step])-24);
 
             #Find corresponding data
@@ -66,18 +65,16 @@ for i_date in range(0,len(model_initial_date)):
 
         #Calculate python datetime for future date to find corresponding time index
         for i_year in range(start_year,end_year+1):
-            cur_year = "%04d"%i_year;
             pre_date = ec_time[i_year-start_year] + datetime.timedelta(hours=int(ec_step[i_step])-24);
-            if "%04d"%pre_date.year != target_year:
-               continue;
+            if "%04d"%pre_date.year == target_year:
 
-            #Find corresponding data for weekly average
-            if "%04d"%pre_date.year+"%02d"%pre_date.month+"%02d"%pre_date.day == target_year + target_end_date:
-               ec_week_year = ec_data[i_year-start_year,i_step,:,:];
+               #Find corresponding data for weekly average
+               if "%04d"%pre_date.year+"%02d"%pre_date.month+"%02d"%pre_date.day == target_year + target_end_date:
+                  ec_week_year = ec_data[i_year-start_year,i_step,:,:];
 
-               #Calculate weekly anomaly
-               ec_week_anomaly = ec_week_year - ec_week_climatology;
+                  #Calculate weekly anomaly
+                  ec_week_anomaly = ec_week_year - ec_week_climatology;
 
-               #Call function "plot_figure" to plot weekly average and anomaly
-               plot_figure.plot_figure(ec_week_year,ec_lat,ec_lon,target_start_date,target_end_date,model_date[:2],target_year,str(i_step+1),'average');
-               plot_figure.plot_figure(ec_week_anomaly,ec_lat,ec_lon,target_start_date,target_end_date,model_date[:2],target_year,str(i_step+1),'anomaly');
+                  #Call function "plot_figure" to plot weekly average and anomaly
+                  plot_figure.plot_figure(ec_week_year,ec_lat,ec_lon,target_start_date,target_end_date,model_date[:2],target_year,str(i_step+1),'average');
+                  plot_figure.plot_figure(ec_week_anomaly,ec_lat,ec_lon,target_start_date,target_end_date,model_date[:2],target_year,str(i_step+1),'anomaly');

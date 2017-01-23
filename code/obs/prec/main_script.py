@@ -31,7 +31,7 @@ lon_left = 80;
 lon_right = 150;
 
 #Define TRMM data path
-trmm_input = '../data/obs/prec';
+trmm_input = '/nas4/liuj/trmm_data';
 trmm_filename = 'TRMM_Daily_Nov_1998-2014.nc';
 cur_trmm_path = trmm_input + '/' + trmm_filename;
 
@@ -64,26 +64,24 @@ for i_date in range(0,len(model_initial_date)):
     #Call function "plot_figure" to plot weekly climatology
     plot_figure.plot_figure(trmm_week_climatology,trmm_lat,trmm_lon,start_date,end_date,model_date[:2],'none','climatology');
 
-    #Calculate python datetime for initial date
-    for i_year in range(start_year,end_year+1):
-        cur_year = "%04d"%i_year;
-        if cur_year != target_year:    #only consider the target year
-           continue;
-        cur_date = datetime.datetime(int(cur_year),int(model_date[:2]),int(model_date[-2:]));
-        trmm_day_all = np.zeros([len(trmm_lat),len(trmm_lon)]);
+    #Calculate python datetime for current initial date
+    cur_year = target_year;
+    cur_date = datetime.datetime(int(cur_year),int(model_date[:2]),int(model_date[-2:]));
+    trmm_day_all = np.zeros([len(trmm_lat),len(trmm_lon)]);
 
-        #Calculate python datetime for future date to find corresponding time index for reading corresponding data
-        index = 0;
-        for i_day in range(start_day,end_day+1):
-            pre_date = cur_date + datetime.timedelta(days=i_day);
-            time_index = trmm_time.index("%04d"%pre_date.year + "%02d"%pre_date.month + "%02d"%pre_date.day);
+    #Calculate python datetime for future date to find corresponding time index for reading corresponding data
+    index = 0;
+    for i_day in range(start_day,end_day+1):
+        pre_date = cur_date + datetime.timedelta(days=i_day);
+        time_index = trmm_time.index("%04d"%pre_date.year + "%02d"%pre_date.month + "%02d"%pre_date.day);
 
-            #Calculate weekly average and anomaly
-            trmm_day_all = trmm_day_all + trmm_data[time_index,:,:];
-            index = index + 1;
-        trmm_week_year = trmm_day_all/index;
-        trmm_week_anomaly = trmm_week_year - trmm_week_climatology;
+        #Calculate weekly average and anomaly
+        trmm_day_all = trmm_day_all + trmm_data[time_index,:,:];
+        index = index + 1;
+    trmm_week_year = trmm_day_all/index;
+    trmm_week_anomaly = trmm_week_year - trmm_week_climatology;
 
-        #Call function "plot_figure" to plot weekly average and anomaly
-        plot_figure.plot_figure(trmm_week_year,trmm_lat,trmm_lon,start_date,end_date,model_date[:2],cur_year,'average');
-        plot_figure.plot_figure(trmm_week_anomaly,trmm_lat,trmm_lon,start_date,end_date,model_date[:2],cur_year,'anomaly');
+    #Call function "plot_figure" to plot weekly average and anomaly
+    plot_figure.plot_figure(trmm_week_year,trmm_lat,trmm_lon,start_date,end_date,model_date[:2],cur_year,'average');
+    plot_figure.plot_figure(trmm_week_anomaly,trmm_lat,trmm_lon,start_date,end_date,model_date[:2],cur_year,'anomaly');
+

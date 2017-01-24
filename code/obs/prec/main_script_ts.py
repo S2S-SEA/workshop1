@@ -76,16 +76,14 @@ for i_date in range(0,len(model_initial_date)):
 
         #Calculate python datetime for future date to find corresponding time index for reading corresponding data
         trmm_day_all = 0;
-        index = 0;
         for i_day in range(start_day,end_day+1):
             pre_date = cur_date + datetime.timedelta(days=i_day);
             time_index = trmm_time.index("%04d"%pre_date.year + "%02d"%pre_date.month + "%02d"%pre_date.day);
 
             #Calculate weekly average and anomaly and store in the empty lists
             trmm_day_all = trmm_day_all + np.mean(trmm_data[time_index,:,:]);
-            index = index + 1;
-        trmm_week_year.append(trmm_day_all/index);
-        trmm_week_anomaly.append(trmm_day_all/index-trmm_week_climatology);
+        trmm_week_year.append(trmm_day_all/7);
+        trmm_week_anomaly.append(trmm_day_all/7-trmm_week_climatology);
     trmm_average_all_week.append(trmm_week_year);
     trmm_anomaly_all_week.append(trmm_week_anomaly);
 

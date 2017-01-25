@@ -25,8 +25,8 @@ lon_left = 80;
 lon_right = 150;
 
 #Define ECMWF and TRMM data path
-ec_input = '/nas4/liuj/s2s';
-trmm_input = '/nas4/liuj/trmm_data';
+ec_input = '../data/model/ecmwf/prec';
+trmm_input = '../data/obs/prec';
 trmm_filename = 'TRMM_Daily_Nov_1998-2014.nc';
 cur_trmm_path = trmm_input + '/' + trmm_filename;
 

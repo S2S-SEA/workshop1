@@ -6,7 +6,7 @@ import numpy as np
 from mpl_toolkits.basemap import Basemap
 import matplotlib.pyplot as plt
 
-def plot_figure(data_0,lat_0,lon_0,start_date,end_date,month,year,step,index):
+def plot_figure(data_0,lat_0,lon_0,month,step):
 
     #Caculate borders for the domain
     latcorners = [lat_0.min(),lat_0.max()];
@@ -31,36 +31,22 @@ def plot_figure(data_0,lat_0,lon_0,start_date,end_date,month,year,step,index):
     lons,lats = m.makegrid(nx,ny);
     x,y = m(lons,lats);
 
-    #Specify colormaps
-    if index == 'climatology' or index == 'average':
-       cmap = plt.cm.gist_earth_r;
-    if index == 'anomaly':
-       cmap = plt.cm.BrBG;
+    #Define discrete colormap
+    cmap = mpl.colors.ListedColormap([(0.6863,0.6863,1),(0.7451,0.8627,1),(0.8235,0.8235,0.8235),(1,0.9294,0.9294),(1,0.8235,0.8235),(1,0.6863,0.6863),(1,0.4902,0.4902),(1,0.1569,0.1569),(0.8235,0,0),(0.5961,0,0)]);
+    bounds = [data.min(),-1.,0.,0.05,0.1,0.2,0.3,0.4,0.5,0.6,1.];
+    norm = mpl.colors.BoundaryNorm(bounds,cmap.N);
 
     #Plotting
-    cs = m.pcolormesh(x,y,data,cmap=cmap);
-
-    #Define data range
-    if index == 'climatology' or index == 'average':
-       cs.set_clim(data.min(),data.max());
-    if index == 'anomaly':
-       data_range = min(abs(data.min()),data.max());
-       cs.set_clim(-data_range,data_range);
+    cs = m.pcolormesh(x,y,data,cmap=cmap,norm=norm);
 
     #Add colorbar
     cbar = m.colorbar(cs,location='bottom',pad="5%");
-    cbar.set_label('mm/day',fontsize=13);
+    cbar.set_ticks([-1.,0.,0.05,0.1,0.2,0.3,0.4,0.5,0.6,1.]);
+    cbar.set_ticklabels(['-1','0','0.05','0.1','0.2','0.3','0.4','0.5','0.6','1']);
 
     #Define title and name convention
-    if index == 'climatology':
-       title_str = 'Rainfall Climatology';
-       name_str = 'ECMWF_' + month + '_' + start_date + '-' + end_date + '_' + 'LT-' + step + '_Climatology.png';
-    if index == 'average':
-       title_str = 'Average Rainfall';
-       name_str = 'ECMWF_' + year + month + '_' + start_date + '-' + end_date + '_' + 'LT-' + step + '_Average.png';
-    if index == 'anomaly':
-       title_str = 'Rainfall Anomaly';
-       name_str = 'ECMWF_' + year + month + '_' + start_date + '-' + end_date + '_' + 'LT-' + step + '_Anomaly.png';
+    title_str = 'Rainfall MSSS' + ' (' + 'LT+' + step + ')';
+    name_str = 'ECMWF_' + month + '_' + 'LT-' + step + '_MSSS.png';
 
     #Add title and save figures
     plt.title(title_str,fontsize=13);

@@ -57,14 +57,17 @@ for i_date in range(0,len(model_initial_date)):
         cur_year = "%04d"%i_year;
         cur_date = datetime.datetime(int(cur_year),int(model_date[:2]),int(model_date[-2:]));
 
-        #Calculate python datetime for future date to find corresponding time index for reading corresponding data 
+        #Calculate python datetime for future date to find corresponding time index for reading corresponding data
+        trmm_day_all = 0;
         for i_day in range(start_day,end_day+1):
             pre_date = cur_date + datetime.timedelta(days=i_day);
             time_index = trmm_time.index("%04d"%pre_date.year + "%02d"%pre_date.month + "%02d"%pre_date.day);
 
             #Calculate weekly climatology
-            trmm_week_all = trmm_week_all + np.mean(trmm_data[time_index,:,:]);
-            index = index + 1;
+            trmm_day_all = trmm_day_all + np.mean(trmm_data[time_index,:,:]);
+        trmm_week_year = trmm_day_all/7;
+        trmm_week_all = trmm_week_all + trmm_week_year;
+        index = index + 1;
     trmm_week_climatology = trmm_week_all/index;
     
     #Calculate python datetime for initial date

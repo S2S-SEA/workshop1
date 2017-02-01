@@ -31,7 +31,7 @@ lon_left = 80;
 lon_right = 150;
 
 #Define TRMM data path
-trmm_input = '../data/obs/prec';
+trmm_input = '.../data/obs/prec';
 trmm_filename = 'TRMM_Daily_Nov_1998-2014.nc';
 cur_trmm_path = trmm_input + '/' + trmm_filename;
 

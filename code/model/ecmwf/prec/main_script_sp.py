@@ -31,7 +31,7 @@ lon_left = 80;
 lon_right = 150;
 
 #Define ECMWF data path
-ec_input = '../data/model/ecmwf/prec';
+ec_input = '.../data/model/ecmwf/prec';
 
 #For each model initial date
 for i_date in range(0,len(model_initial_date)):

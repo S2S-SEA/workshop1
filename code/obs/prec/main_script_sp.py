@@ -59,7 +59,7 @@ for i_date in range(0,len(model_initial_date)):
 
             #Calculate weekly climatology
             trmm_day_all = trmm_day_all + trmm_data[time_index,:,:]
-            trmm_week_year = trmm_day_all/7;
+        trmm_week_year = trmm_day_all/7;
         trmm_week_all = trmm_week_all + trmm_week_year;
         index = index + 1;
     trmm_week_climatology = trmm_week_all/index;

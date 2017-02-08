@@ -27,7 +27,7 @@ def getInterim(filename) :
     nc.close ()
     return lons, lats, times, data
 
-def getECMWFweeklly(filename): 
+def getECMWFweekly(filename): 
     ##Input data information:
     #just the file name where the netCDF file is stored
 ##Return data information:
@@ -46,7 +46,26 @@ def getECMWFweeklly(filename):
     data = dataTemp[:,:,::-1, :] # have to flip, lats go the other way!
     ecTemp = dataTemp[::-1,:, :, :]
     nc.close()
+
+    # now getting it in the correct format, so that only the weeks in the period are included
+
     return dataLat, dataLon, dataTime, dataStep, ecTemp
+
+
+def makeSmaller(lats, lons, lat_up, lat_down, lon_left, lon_right, data, columns):
+    #this takes a 4 or 5 D array, and makes the latitude and longidute (last two columns) smaller. 
+    lat_index2 = np.where(lats == lats.flat[np.abs(lats - lat_up).argmin()])[0] # need to make this into a function
+    lat_index1 = np.where(lats == lats.flat[np.abs(lats - lat_down).argmin()])[0]
+    lon_index1 = np.where(lons == lons .flat[np.abs(lons  - lon_left).argmin()])[0]
+    lon_index2 = np.where(lons  == lons .flat[np.abs(lons  - lon_right).argmin()]) [0]
+    lats = lats[lat_index1[0]:lat_index2[0]]
+    lons = lons[lon_index1[0]:lon_index2[0]]
+    if columns == 5:
+        data = data[:,:, :,lat_index1[0]:lat_index2[0],lon_index1[0]:lon_index2[0]]
+    else:
+        data = data[:,:,lat_index1[0]:lat_index2[0],lon_index1[0]:lon_index2[0]]
+    return data, lats, lons
+
 def plot_figure(data_0,lat_0,lon_0,time_period,dataLimit,index):
 ##Input data information:
     #data_0 = the temperature file that want to plot. Should be in format data[len(lat_0), len(lon_0)]

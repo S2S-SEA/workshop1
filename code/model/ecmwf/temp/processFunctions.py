@@ -47,7 +47,7 @@ def processInterim(initMonth, initDate, startYear, endYear, type):
 
 # Creating the weekly temperature anomaly, same format as the interimWeekly file
     interimAnom = np.empty(interimWeekly.shape)
-    for i in range(7):
+    for i in range(len(initDate)):
         interimAnom[i,:,:,:] = interimWeekly[i, :, :, :] - interimClimo[i, :, :]
     if type == 1:
         interimType = interimWeekly

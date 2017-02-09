@@ -14,7 +14,6 @@ import datetime
 
 # Define data folder
 dest_dir = '../../../../data/model/ecmwf/prec/'
-no_of_weeks = 4
 
 # All the initial dates with complete 7-day week in Nov for the 2016 runs
 init_date = ['10-13','10-17','10-20','10-24','10-27','10-31','11-03','11-07','11-10','11-14','11-17','11-21','11-24']
@@ -37,16 +36,20 @@ for i_date in range(0,len(init_date)):
     prec_lat = ds_cf.variables['latitude'][:]
     prec_lon = ds_cf.variables['longitude'][:]
   
+    prec_pf = ds_pf.variables['tp'][:]
+    prec_cf = ds_cf.variables['tp'][:]
+
     # Read in the array from pf's total precip ('tp') variable
-    arr_pf = ds_pf.variables['tp'][:]
-    # Read in the cf's total precip ('tp') variable
-    arr_cf = ds_cf.variables['tp'][:]
+    arr_pf = prec_pf
 
     arr_shp = arr_pf.shape
     # Create a new array to accommodate the 10 pf and 1 cf members
     arr_comb = np.empty([arr_shp[0], arr_shp[1], arr_shp[2]+1, arr_shp[3], arr_shp[4]])
     # Populate arr_comb with pf and cf data
     arr_comb[:,:,0:10,:,:] = arr_pf
+
+    # Read in the cf's total precip ('tp') variable
+    arr_cf = prec_cf
     arr_comb[:,:,10,:,:] = arr_cf
 
     # Average over the ensemble axis/dimension
@@ -66,7 +69,7 @@ for i_date in range(0,len(init_date)):
     # Create all the required dimensions of the variable 
     latitude = ds_out.createDimension('latitude', len(prec_lat))
     longitude = ds_out.createDimension('longitude', len(prec_lon))
-    step = ds_out.createDimension('step', no_of_weeks) 
+    step = ds_out.createDimension('step', len(prec_st)-1) 
     time = ds_out.createDimension('time', len(prec_hd))    
 
     # Create the variables to store the data
@@ -75,7 +78,7 @@ for i_date in range(0,len(init_date)):
     latitudes = ds_out.createVariable('latitude', 'f4', ('latitude',))
     longitudes = ds_out.createVariable('longitude', 'f4', ('longitude',)) 
     # Create the 4-d precipitation variable
-    precip = ds_out.createVariable('prec', 'f4', ('time','step','latitude','longitude',),) 
+    precip = ds_out.createVariable('precip', 'f4', ('time','step','latitude','longitude',),) 
 
     # Define the properties of the variables
     times.units = 'hours since 2016-' + init_date[i_date] + ' 00:00:00.0';
@@ -95,7 +98,7 @@ for i_date in range(0,len(init_date)):
     latitudes[:] = prec_lat   
     longitudes[:] = prec_lon
     times[:] = netCDF4.date2num(prec_time, units=times.units, calendar=times.calendar);
-    steps[:] = prec_st[1::1]  
+    steps[:] = prec_st[1:5]  
     precip[:,:,:,:] = arr_wkly[:,:,:,:]
 
     # File is saved to .nc once closed

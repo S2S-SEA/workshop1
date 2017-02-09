@@ -27,28 +27,24 @@ for i_date in range(0,len(init_date)):
     # to print out the file and variable information
     #print(ds_pf.file_format)
     #print(ds_pf.dimensions.keys())
-    print(ds_pf.variables)
+    #print(ds_pf.variables)
 
     # Read in the variables from cf
     temp_hd = ds_cf.variables['hdate'][:]
     temp_st = ds_cf.variables['step'][:]
     temp_lat = ds_cf.variables['latitude'][:]
     temp_lon = ds_cf.variables['longitude'][:]
-  
-    temp_pf = ds_pf.variables['t2m'][:]
-    temp_cf = ds_cf.variables['t2m'][:]
 
     # Read in the array from pf's sfctemp ('t2m') variable
-    arr_pf = temp_pf
+    arr_pf = ds_pf.variables['t2m'][:]
+    # Read in the cf's total sfctemp ('t2m') variable
+    arr_cf = ds_cf.variables['t2m'][:]
 
     arr_shp = arr_pf.shape
     # Create a new array to accommodate the 10 pf and 1 cf members
     arr_comb = np.empty([arr_shp[0], arr_shp[1], arr_shp[2]+1, arr_shp[3], arr_shp[4]])
     # Populate arr_comb with pf and cf data
     arr_comb[:,:,0:10,:,:] = arr_pf
-
-    # Read in the cf's total sfctemp ('t2m') variable
-    arr_cf = temp_cf
     arr_comb[:,:,10,:,:] = arr_cf
 
     # Average over the ensemble axis/dimension
@@ -57,8 +53,8 @@ for i_date in range(0,len(init_date)):
     # Calculate daily average for each week
     arr_wkly = np.empty([arr_shp[0], no_of_wks, arr_shp[3], arr_shp[4]])
     for i in range(no_of_wks):
-        print("Calculating for week: ", i)
-        arr_wkly[:,i,:,:] = np.mean(arr_ens_avg[:,(i*7):(i*7+6),:,:], axis=1) # Average over the week
+        #print("Calculating for week: ", i)
+        arr_wkly[:,i,:,:] = np.mean(arr_ens_avg[:,(i*7):(i*7+7),:,:], axis=1) # Average over the week
     
     #-------------------------------------
     # Output variable to netCDF
@@ -78,7 +74,7 @@ for i_date in range(0,len(init_date)):
     latitudes = ds_out.createVariable('latitude', 'f4', ('latitude',))
     longitudes = ds_out.createVariable('longitude', 'f4', ('longitude',)) 
     # Create the 4-d temperature variable
-    sfctemp = ds_out.createVariable('sfctemp', 'f4', ('time','step','latitude','longitude',),) 
+    sfctemp = ds_out.createVariable('temp', 'f4', ('time','step','latitude','longitude',),) 
 
     # Define the properties of the variables
     times.units = 'hours since 2016-' + init_date[i_date] + ' 00:00:00.0';

@@ -2,13 +2,20 @@
 '''
 This program downloads the ECMWF hindcast data using MARS.
 The example is for Nov 2016 run for all model output that
-fall within Nov for perturbed forecast ('pf'). 
+fall within Nov for perturbed forecast ('pf'). To change to other
+months you have to check the corresponding initial dates for that 
+month from the ECMWF S2S website and then change the `init_date` variable 
+below. 
 Choice of 1998-2014 for download corresponds to TRMM data 
 available for the verification later.
 '''
 from subprocess import call # This library needed to make system call
 from ecmwfapi import ECMWFDataServer # Load the ECMWF API library
 server = ECMWFDataServer()
+
+# All the initial dates that have full weeks in Nov
+# Change here for other months
+init_date = ['10-13','10-17','10-20','10-24','10-27','10-31','11-03','11-07','11-10','11-14','11-17','11-21','11-24']
  
 # Define data folder, and create it
 dest_dir = '../../../../data/model/ecmwf/prec/'
@@ -17,8 +24,6 @@ call("mkdir -p " + dest_dir, shell=True)
 # Remove all *pf.nc files, else grib_to_netcdf will convert with "protocol error"
 call("rm -rf " + dest_dir + "*_pf.nc", shell=True)
 
-# All the initial dates that have full weeks in Nov
-init_date = ['10-13','10-17','10-20','10-24','10-27','10-31','11-03','11-07','11-10','11-14','11-17','11-21','11-24']
 
 # For each initial date
 for i in range(0, len(init_date)):

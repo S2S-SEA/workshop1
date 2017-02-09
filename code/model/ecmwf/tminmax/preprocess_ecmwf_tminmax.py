@@ -9,7 +9,7 @@ import netCDF4
 import numpy as np
 import datetime
 
-vtype = 0 # 0: tmin, 1: tmax
+vtype = 1 # 0: tmin, 1: tmax
 vsuffx = ['tmin','tmax']
 vname = ['mn2t6','mx2t6']
 
@@ -30,7 +30,7 @@ for i_date in range(0,len(init_date)):
     # to print out the file and variable information
     #print(ds_pf.file_format)
     #print(ds_pf.dimensions.keys())
-    print(ds_pf.variables)
+    #print(ds_pf.variables)
 
     # Read in the variables from cf
     temp_hd = ds_cf.variables['hdate'][:]
@@ -38,20 +38,16 @@ for i_date in range(0,len(init_date)):
     temp_lat = ds_cf.variables['latitude'][:]
     temp_lon = ds_cf.variables['longitude'][:]
   
-    temp_pf = ds_pf.variables[vname[vtype]][:]
-    temp_cf = ds_cf.variables[vname[vtype]][:]
-
     # Read in the array from pf's sfctemp min or max ('mn2t6' or 'mx2t6') variable
-    arr_pf = temp_pf
+    arr_pf = ds_pf.variables[vname[vtype]][:]
+    # Read in the cf's total sfctemp ('t2m') variable
+    arr_cf = ds_cf.variables[vname[vtype]][:]
 
     arr_shp = arr_pf.shape
     # Create a new array to accommodate the 10 pf and 1 cf members
     arr_comb = np.empty([arr_shp[0], arr_shp[1], arr_shp[2]+1, arr_shp[3], arr_shp[4]])
     # Populate arr_comb with pf and cf data
     arr_comb[:,:,0:10,:,:] = arr_pf
-
-    # Read in the cf's total sfctemp ('t2m') variable
-    arr_cf = temp_cf
     arr_comb[:,:,10,:,:] = arr_cf
 
     # Average over the ensemble axis/dimension
@@ -61,17 +57,17 @@ for i_date in range(0,len(init_date)):
     arr_daily = np.empty([arr_shp[0], no_of_wks*7, arr_shp[3], arr_shp[4]])
     arr_wkly = np.empty([arr_shp[0], no_of_wks, arr_shp[3], arr_shp[4]])
     for day in range(no_of_wks*7):
-        print("Calculating for day: ", day)
+        #print("Calculating for day: ", day)
         if vtype == 0:
             # Calculate for each day the min
-            arr_daily[:,day,:,:] = np.minimum(arr_ens_avg[:,(day*4):((day+1)*4),:,:]) # Average over the week
+            arr_daily[:,day,:,:] = np.amin(arr_ens_avg[:,(day*4):((day+1)*4),:,:], axis=1)
         else:
             # Calculate for each day the max
-            arr_daily[:,day,:,:] = np.maximum(arr_ens_avg[:,(day*4):((day+1)*4),:,:]) # Average over the week
+            arr_daily[:,day,:,:] = np.amax(arr_ens_avg[:,(day*4):((day+1)*4),:,:], axis=1)
             
     for week in range(no_of_wks):
-        print("Calculating average for week: ", week)
-        arr_wkly[:,i,:,:] = np.mean(arr_daily[:,(i*7):(i*7+6),:,:], axis=1) # Average over the week
+        #print("Calculating average for week: ", week)
+        arr_wkly[:,week,:,:] = np.mean(arr_daily[:,(week*7):(week*7+7),:,:], axis=1) # Average over the week
 
 
     #-------------------------------------
@@ -92,7 +88,7 @@ for i_date in range(0,len(init_date)):
     latitudes = ds_out.createVariable('latitude', 'f4', ('latitude',))
     longitudes = ds_out.createVariable('longitude', 'f4', ('longitude',)) 
     # Create the 4-d temperature variable
-    sfctemp = ds_out.createVariable('sfctemp', 'f4', ('time','step','latitude','longitude',),) 
+    sfctemp = ds_out.createVariable(vsuffx[vtype], 'f4', ('time','step','latitude','longitude',),) 
 
     # Define the properties of the variables
     times.units = 'hours since 2016-' + init_date[i_date] + ' 00:00:00.0';
@@ -115,7 +111,7 @@ for i_date in range(0,len(init_date)):
     latitudes[:] = temp_lat   
     longitudes[:] = temp_lon
     times[:] = netCDF4.date2num(temp_time, units=times.units, calendar=times.calendar);
-    steps[:] = temp_st[6::7]  
+    steps[:] = temp_st[27::28]  
     sfctemp[:,:,:,:] = arr_wkly[:,:,:,:]
 
     # File is saved to .nc once closed

@@ -11,6 +11,11 @@ next stage of processing.
 import netCDF4
 import numpy as np
 import datetime
+import os
+import sys
+sys.path.append(os.path.abspath(os.path.dirname(__file__)) + '/' + '../../../utils/')
+import s2s_utils_comm as ucomm
+#print("path: ",os.path.abspath(os.path.dirname(__file__)) + '/' + '../../../utils/')
 
 # Define data folder
 dest_dir = '../../../../data/model/ecmwf/prec/'
@@ -61,6 +66,8 @@ for i_date in range(0,len(init_date)):
     # Output variable to netCDF
     #-------------------------------------
     # Define output file destination
+    ucomm.save_netcdf(dest_dir,'prec',init_date[i_date],prec_lat,prec_lon,no_of_weeks,prec_hd,prec_st,'kg m**-2','Total Precipitation',arr_wkly,1,1)
+    '''
     ds_out = netCDF4.Dataset(dest_dir + "ECMWF_prec_2016-" + init_date[i_date] + '_weekly.nc', 'w',format='NETCDF4_CLASSIC')
 
     # Create all the required dimensions of the variable 
@@ -100,6 +107,6 @@ for i_date in range(0,len(init_date)):
 
     # File is saved to .nc once closed
     ds_out.close()  
-
+    '''
     ds_pf.close()
     ds_cf.close()

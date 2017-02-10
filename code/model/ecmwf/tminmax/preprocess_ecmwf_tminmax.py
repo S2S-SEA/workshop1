@@ -8,8 +8,12 @@ a single ensemble mean value. The temperature forecast for each week
 import netCDF4
 import numpy as np
 import datetime
+import os
+import sys
+sys.path.append(os.path.abspath(os.path.dirname(__file__)) + '/' + '../../../utils/')
+import s2s_utils_comm as ucomm
 
-vtype = 1 # 0: tmin, 1: tmax
+vtype = 0 # 0: tmin, 1: tmax
 vsuffx = ['tmin','tmax']
 vname = ['mn2t6','mx2t6']
 
@@ -74,6 +78,9 @@ for i_date in range(0,len(init_date)):
     # Output variable to netCDF
     #-------------------------------------
     # Define output file destination
+    ucomm.save_netcdf(dest_dir,vsuffx[vtype],init_date[i_date],temp_lat,temp_lon,no_of_wks,temp_hd,temp_st,'K','2 m ' + vsuffx[vtype] + ' daily temperature',arr_wkly,step_start=27,step_skip=28)  
+  
+    '''
     ds_out = netCDF4.Dataset(dest_dir + "ECMWF_" + vsuffx[vtype] + "_2016-" + init_date[i_date] + '_weekly.nc', 'w',format='NETCDF4_CLASSIC')
 
     # Create all the required dimensions of the variable 
@@ -117,5 +124,6 @@ for i_date in range(0,len(init_date)):
     # File is saved to .nc once closed
     ds_out.close()  
 
+    '''
     ds_pf.close()
     ds_cf.close()

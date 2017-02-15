@@ -2,7 +2,6 @@
 This file downloads ERA-Interim temperature data for a particular time period of the year.
 Each year is saved as a different file. The data is downloaded in NetCDF format. 
 This version is set to download November data for the years 1998-2015, but can be modified under the 'Specify' heading.
-BEFORE UPLOADING, MAKE SURE GRID SIZE IS CORRECT. MAY WANT TO MAKE OTHER CHANGES
 '''
 ##-------------------------SPECIFY---------------------------
 # Specify the time period for which to download

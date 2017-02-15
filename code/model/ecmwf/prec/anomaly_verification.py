@@ -5,8 +5,8 @@ import s2s_utility
 
 #Initial setup
 target_month = 11
-cora_processing = True
-msss_processing = False
+process_cora = True
+process_msss = False
 
 #---------------------------------------------------
 #This part is to prepare TRMM and ECMWF anomaly data
@@ -45,7 +45,7 @@ lon_right = 150
 grid_lat = 10
 grid_lon = 10
 
-if cora_processing == True:
+if process_cora == True:
    #For each model lead time
    for i_step in range(0,ec_anomaly.shape[0]):
        sum_ec_trmm = numpy.zeros([len(ec_lat),len(ec_lon)])
@@ -66,7 +66,7 @@ if cora_processing == True:
        name_str = 'ECMWF_' + calendar.month_abbr[target_month] + '_LT' + str(i_step+1) + '_CORA.png'
        s2s_utility.plot_verification(cora,ec_lat,ec_lon,lat_down,lat_up,lon_left,lon_right,grid_lat,grid_lon,title_str,name_str,'CORA')
 
-if msss_processing == True:
+if process_msss == True:
    #For each model lead time
    for i_step in range(0,ec_anomaly.shape[0]):
        sum_ec_trmm = numpy.zeros([len(ec_lat),len(ec_lon)])

@@ -77,19 +77,22 @@ if plotting:
     plotYear = round(float(input('Please enter the year you would like to plot: ')))
     while (plotYear < start_year) | (plotYear > end_year):
         plotYear = input('This year is out of range. Please enter the year you would like to print: ')
+    plotWeek = round(float(input('Please enter the week you would like to plot: ')))
+    while (plotWeek < 0) | (plotWeek > len(weeks)-1):
+        plotWeek = input('This week is out of range. Please enter the week you would like to print: ')
 
-    for i in range(len(weeks)):
-        j = plotYear- start_year
-         #Define title and name convention
-        title_str = 'Average Temperature, ERA Interim '
-        name_str = 'interim_' +str(plotYear)+"_11_"+str(weeks[i])+'_' + 'Average'+'.png'
-        s2s.plot_figure(erai_weekly[j,i, :, :],lats,lons,[240,300],title_str,name_str,'Average')
-        title_str = 'Temperature Climatology, ERA Interim '
-        name_str = 'interim_' +str(plotYear)+"_11_"+str(weeks[i])+'_' + 'Climatology'+'.png'
-        s2s.plot_figure(erai_clim[i, :, :],lats,lons,[240,300],title_str,name_str,'Climatology')
-        title_str = 'Temperature Anomaly, ERA Interim '
-        name_str = 'interim_' +str(plotYear)+"_11_"+str(weeks[i])+'_' + 'Anomaly'+'.png'
-        s2s.plot_figure(erai_anom[j,i, :, :],lats,lons,[-3,3],title_str,name_str,'Anomaly')
+    i = plotWeek
+    j = plotYear- start_year
+    #Define title and name convention
+    title_str = 'Average Temperature, ERA Interim '
+    name_str = 'interim_' +str(plotYear)+"_11_"+str(weeks[i])+'_' + 'Average'+'.png'
+    s2s.plot_figure(erai_weekly[j,i, :, :],lats,lons,[240,300],title_str,name_str,'Average')
+    title_str = 'Temperature Climatology, ERA Interim '
+    name_str = 'interim_' +str(plotYear)+"_11_"+str(weeks[i])+'_' + 'Climatology'+'.png'
+    s2s.plot_figure(erai_clim[i, :, :],lats,lons,[240,300],title_str,name_str,'Climatology')
+    title_str = 'Temperature Anomaly, ERA Interim '
+    name_str = 'interim_' +str(plotYear)+"_11_"+str(weeks[i])+'_' + 'Anomaly'+'.png'
+    s2s.plot_figure(erai_anom[j,i, :, :],lats,lons,[-3,3],title_str,name_str,'Anomaly')
 
 ##--------------------------------------SAVING-------------------------------------------------
 if saving:

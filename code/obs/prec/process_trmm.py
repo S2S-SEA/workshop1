@@ -14,7 +14,7 @@ end_year = 2014
 #------------------------------------------------------------------
 
 #Define TRMM input path
-trmm_input = '.../data/obs/prec'
+trmm_input = '../../../data/obs/prec'
 trmm_filename = 'TRMM_Daily_Nov_1998-2014.nc'
 cur_trmm_path = trmm_input + '/' + trmm_filename
 
@@ -41,11 +41,11 @@ for i_year in range(0,end_year-start_year+1):
     trmm_anomaly[:,i_year,:,:] = trmm_average[:,i_year,:,:] - trmm_climatology
 
 #-----------------------------------------------------------------------------
-#This part is to output and display ECMWF rainfall climatology/average/anomaly
+#This part is to output and display TRMM rainfall climatology/average/anomaly
 #-----------------------------------------------------------------------------
 
 #Define TRMM output path
-trmm_output = '.../data/obs/prec'
+trmm_output = '../../../data/obs/prec'
 
 #Choose to output or display data
 data_output = True

@@ -17,7 +17,7 @@ model_step = 4
 #-------------------------------------------------------------------
 
 #Define ECMWF input path
-ec_input = '.../data/model/ecmwf/prec'
+ec_input = '../../../../data/model/ecmwf/prec'
 
 #Read ECMWF lat/lon
 nc = netCDF4.Dataset(ec_input + '/' + 'ECMWF_prec_2016-10-13_weekly.nc')
@@ -59,7 +59,7 @@ for i_year in range(0,end_year-start_year+1):
 #-----------------------------------------------------------------------------
 
 #Define ECMWF output path
-ec_output = '.../data/model/ecmwf/prec'
+ec_output = '../../../../data/model/ecmwf/prec'
 
 #Choose to output or display data
 data_output = True

@@ -45,7 +45,7 @@ def read_ec(cur_ec_path):
 
     #Open ECMWF path to retreive data
     nc = netCDF4.Dataset(cur_ec_path)
-    prcpvar = nc.variables['precip']
+    prcpvar = nc.variables['prec']
     pdata = prcpvar[:,:,:,:]    #time,step,lat,lon
 
     #Read ECMWF time, step and data

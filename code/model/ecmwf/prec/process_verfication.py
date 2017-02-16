@@ -13,7 +13,7 @@ process_msss = False
 #---------------------------------------------------
 
 #Define TRMM input path
-trmm_input = '../../../data/obs/prec'
+trmm_input = '../../../../data/obs/prec'
 trmm_filename = 'TRMM_Nov_Anomaly_Weekly.nc'
 cur_trmm_path = trmm_input + '/' + trmm_filename
 

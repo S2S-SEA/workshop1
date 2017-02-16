@@ -18,7 +18,7 @@ trmm_filename = 'TRMM_Nov_Anomaly_Weekly.nc'
 cur_trmm_path = trmm_input + '/' + trmm_filename
 
 #Define ECMWF input path
-ec_input = '.../data/model/ecmwf/prec'
+ec_input = '../../../../data/model/ecmwf/prec'
 ec_filename = 'ECMWF_Nov_Anomaly_Weekly.nc'
 cur_ec_path = ec_input + '/' + ec_filename
 

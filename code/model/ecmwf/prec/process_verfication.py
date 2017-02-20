@@ -14,12 +14,12 @@ process_msss = False
 
 #Define TRMM input path
 trmm_input = '../../../../data/obs/prec'
-trmm_filename = 'TRMM_Nov_Anomaly_Weekly.nc'
+trmm_filename = 'TRMM_' + calendar.month_abbr[target_month] + '_Anomaly_Weekly.nc'
 cur_trmm_path = trmm_input + '/' + trmm_filename
 
 #Define ECMWF input path
 ec_input = '../../../../data/model/ecmwf/prec'
-ec_filename = 'ECMWF_Nov_Anomaly_Weekly.nc'
+ec_filename = 'ECMWF_' + calendar.month_abbr[target_month] + '_Anomaly_Weekly.nc'
 cur_ec_path = ec_input + '/' + ec_filename
 
 #Read TRMM and ECMWF data

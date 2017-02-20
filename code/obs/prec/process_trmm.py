@@ -6,6 +6,7 @@ import s2s_utility_prec
 
 #Initial setup
 week_initial_date = ['1103','1107','1110','1114','1117','1121','1124']
+target_month = 11
 start_year = 1998
 end_year = 2014
 
@@ -15,7 +16,7 @@ end_year = 2014
 
 #Define TRMM input path
 trmm_input = '../../../data/obs/prec'
-trmm_filename = 'TRMM_Daily_Nov_1998-2014.nc'
+trmm_filename = 'TRMM_Daily_' + calendar.month_abbr[target_month] + '_1998-2014.nc'
 cur_trmm_path = trmm_input + '/' + trmm_filename
 
 #Read TRMM dataset
@@ -56,13 +57,13 @@ if data_output == True:
    trmm_week = range(0,len(week_initial_date))
    trmm_year = range(start_year,end_year+1)
 
-   trmm_filename = 'TRMM_' + calendar.month_abbr[int(week_date[:2])] + '_Climatology_Weekly.nc'
+   trmm_filename = 'TRMM_' + calendar.month_abbr[target_month] + '_Climatology_Weekly.nc'
    s2s_utility_prec.write_trmm(trmm_output,trmm_filename,trmm_climatology,trmm_week,trmm_year,trmm_lat,trmm_lon,'Climatology')
 
-   trmm_filename = 'TRMM_' + calendar.month_abbr[int(week_date[:2])] + '_Average_Weekly.nc'
+   trmm_filename = 'TRMM_' + calendar.month_abbr[target_month] + '_Average_Weekly.nc'
    s2s_utility_prec.write_trmm(trmm_output,trmm_filename,trmm_average,trmm_week,trmm_year,trmm_lat,trmm_lon,'Average')
 
-   trmm_filename = 'TRMM_' + calendar.month_abbr[int(week_date[:2])] + '_Anomaly_Weekly.nc'
+   trmm_filename = 'TRMM_' + calendar.month_abbr[target_month] + '_Anomaly_Weekly.nc'
    s2s_utility_prec.write_trmm(trmm_output,trmm_filename,trmm_anomaly,trmm_week,trmm_year,trmm_lat,trmm_lon,'Anomaly')
 
 if plot_figure == True:

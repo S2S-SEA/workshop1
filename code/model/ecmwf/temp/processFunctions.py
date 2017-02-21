@@ -24,7 +24,7 @@ def processInterim(month, weeks, startYear, endYear, type):
  #lons, lats, dates, erai_Type
  #if type == 1, returns the weekly absolute value, 2 == climatology value, 3 = anomaly
     startfile= "../../../.."
-    file = "/data/obs/temp/interim_temp_6hr_"
+    file = "/data/obs/temp/erai_temp_6hr_"
 
 ##--------------------------------PROCESSING-------------------------------
 #Creating the interimWeekly file. format is [year, week (based on weeks file), lat, lon]

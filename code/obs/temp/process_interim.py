@@ -11,11 +11,13 @@ import datetime
 import numpy as np
 import s2s_utilities_temp as s2s
 
-##-------------------------------------SPECIFY ----------------------------------------
+##---------------------------------------------
+#		SPECIFY 
+#-----------------------------------------------
 # This specifies the location of the files. Note that it assumes that the name of the file, the year is at the end. 
 # If not, change lines 17 (& possibly 28) 
 start_file= "../../.."
-file = "/data/obs/temp/interim_temp_6hr_"
+file = "/data/obs/temp/erai_temp_6hr_"
 
 #This contains the information on the date (month, days of the start of each week in the month, and year span)
 month = 11 #the month that you are looking at 
@@ -24,10 +26,13 @@ start_year = 1998
 end_year = 2014
 
 #Options:
-print_data=0#[0,18,13] # set print_data = 0 if nothing to print out, otherwise specify [year, latitude location, longitude location]
-plotting = True# if true, the plots will be done and saved, no plots if false. Check the naming convention is correct under plotting section.
-saving = False # If true, will save the date. Check the naming convention is correct under saving section.
-output_file= "../../../data/obs/" #this is the file to save to the data to
+# set print_data = 0 if nothing to print,otherwise specify [year,latitude location, longitude location]
+#Plotting:Plots saved if true. Skip if false. Check naming convention under plotting
+#Saving: True: saved as netCDF in location output_file. Check naming convention under saving
+print_data=[1998,10,23]  
+plotting = False
+saving = False 
+output_file= "../../../data/obs/" 
 
 ##--------------------------------PROCESSING-------------------------------
 #Creating the erai_weekly file. format is [year, week (based on weeks file), lat, lon]
@@ -72,34 +77,38 @@ for i in range(len(weeks)):
         print(erai_anom[j, i, print_data[1], print_data[2]]) 
         print(str(print_data[0]) +" Average Temperature for week " + str(i))  
         print(erai_weekly[j, i, print_data[1], print_data[2]]) 
-##---------------------------------------PLOTTING-------------------------------------------
+##-----------------------------------------------
+#                    PLOTTING
+#------------------------------------------------
 if plotting: 
     plotYear = round(float(input('Please enter the year you would like to plot: ')))
-    while (plotYear < start_year) | (plotYear > end_year):
-        plotYear = input('This year is out of range. Please enter the year you would like to print: ')
+    while (plotYear < start_year) or (plotYear > end_year):
+        plotYear = round(float(input('This year is out of range. Please enter the year you would like to plot: ')))
     plotWeek = round(float(input('Please enter the week you would like to plot: ')))
-    while (plotWeek < 0) | (plotWeek > len(weeks)-1):
-        plotWeek = input('This week is out of range. Please enter the week you would like to print: ')
+    while (plotWeek < 0) or (plotWeek >= len(weeks)):
+        plotWeek = round(float(input('This week is out of range. Please enter the week you would like to plot (0-'+str(len(weeks))+': ')))
 
     i = plotWeek
     j = plotYear- start_year
     #Define title and name convention
-    title_str = 'Average Temperature, ERA Interim '
-    name_str = 'interim_' +str(plotYear)+"_11_"+str(weeks[i])+'_' + 'Average'+'.png'
+    title_str = 'Average Temperature '+str(weeks[i])+'/11/'+str(plotYear)+', ERA Interim '
+    name_str = 'erai_' +str(plotYear)+"_11_"+str(weeks[i])+'_' + 'Average'+'.png'
     s2s.plot_figure(erai_weekly[j,i, :, :],lats,lons,[240,300],title_str,name_str,'Average')
-    title_str = 'Temperature Climatology, ERA Interim '
-    name_str = 'interim_' +str(plotYear)+"_11_"+str(weeks[i])+'_' + 'Climatology'+'.png'
+    title_str = 'Temperature Climatology '+str(weeks[i])+'/11/'+str(plotYear)+', ERA Interim '
+    name_str = 'erai_' +str(plotYear)+"_11_"+str(weeks[i])+'_' + 'Climatology'+'.png'
     s2s.plot_figure(erai_clim[i, :, :],lats,lons,[240,300],title_str,name_str,'Climatology')
-    title_str = 'Temperature Anomaly, ERA Interim '
-    name_str = 'interim_' +str(plotYear)+"_11_"+str(weeks[i])+'_' + 'Anomaly'+'.png'
+    title_str = 'Temperature Anomaly '+str(weeks[i])+'/11/'+str(plotYear)+', ERA Interim '
+    name_str = 'erai_' +str(plotYear)+"_11_"+str(weeks[i])+'_' + 'Anomaly'+'.png'
     s2s.plot_figure(erai_anom[j,i, :, :],lats,lons,[-3,3],title_str,name_str,'Anomaly')
 
-##--------------------------------------SAVING-------------------------------------------------
+##------------------------------------------------
+#		SAVING
+#-------------------------------------------------
 if saving:
 # here we save the data to the specified location output_file, with the name int_filename)
-    int_filename = 'ERAInt_Month' + str(month) + '_Anomaly_Weekly.nc'
+    int_filename = 'ERAInt_Month_' + str(month) + '_Anomaly_Weekly.nc'
     s2s.writeInterim(output_file,int_filename,erai_anom,range(0,len(weeks)),range(start_year,end_year+1),lats,lons,'Anomaly')
-    int_filename = 'ERAInt_Month' + str(month) + '_Average_Weekly.nc'
+    int_filename = 'ERAInt_Month_' + str(month) + '_Average_Weekly.nc'
     s2s.writeInterim(output_file,int_filename,erai_weekly,range(0,len(weeks)),range(start_year,end_year+1),lats,lons,'Average')
-    int_filename = 'ERAInt_Month' + str(month) + '_Climatology_Weekly.nc'
+    int_filename = 'ERAInt_Month_' + str(month) + '_Climatology_Weekly.nc'
     s2s.writeInterim(output_file,int_filename,erai_clim,range(0,len(weeks)),range(start_year,end_year+1),lats,lons,'Climatology')

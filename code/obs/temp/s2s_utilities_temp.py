@@ -1,4 +1,4 @@
-﻿#these are the basic functions for my scripts!
+#these are the basic functions for my scripts!
 #those for the plots
 import matplotlib as mpl
 mpl.use('Agg')
@@ -44,7 +44,7 @@ def getECMWFweekly(filename):
     dataTime  = num2date(timeRaw[:],timeRaw.units)
     dataTime = dataTime[::-1]
     dataStep = nc.variables['step'][:]
-    dataTemp= nc.variables['sfctemp'][:]
+    dataTemp= nc.variables['temp'][:]
 #    data = dataTemp[:,:,::-1, :] # have to flip, lats go the other way!
     ecTemp = dataTemp[::-1,:, ::-1, :]
     nc.close()

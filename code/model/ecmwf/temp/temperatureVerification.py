@@ -63,17 +63,17 @@ msss = np.empty([lead_times,len(erai_lat), len(erai_lon)])
 # Now calculating the variables
 for i_step in range(lead_times):
         # Getting the variables
-        sum_ec_trmm_sq=np.sum(np.sum((ec_anom[i_step, :, :, :, :]-erai_anom[:, :, :, :])**2, axis = 0), axis = 0)
-        sum_ec_trmm =np.sum(np.sum(ec_anom[i_step, :, :, :, :]*erai_anom[:, :, :, :], axis = 0), axis = 0)
+        sum_ec_obs_sq=np.sum(np.sum((ec_anom[i_step, :, :, :, :]-erai_anom[:, :, :, :])**2, axis = 0), axis = 0)
+        sum_ec_obs =np.sum(np.sum(ec_anom[i_step, :, :, :, :]*erai_anom[:, :, :, :], axis = 0), axis = 0)
         sum_ec =  np.sum(np.sum(ec_anom[i_step, :, :, :, :]**2, axis =0), axis = 0)
-        sum_trmm =  np.sum(np.sum(erai_anom[:, :, :, :]**2, axis = 0), axis =0)
+        sum_obs =  np.sum(np.sum(erai_anom[:, :, :, :]**2, axis = 0), axis =0)
 
         #Calculate CORA
         #this is working out the formula = sum(interimAnomaly*ecmwfAnomlay)/(sqrt(sum(interimAnomaly^2))*sqrt(sum(ecmwfAnomaly^2))
-        cora[i_step, :, :] = sum_ec_trmm/(sum_ec**(1.0/2)*sum_trmm**(1.0/2))
+        cora[i_step, :, :] = sum_ec_obs/(sum_ec**(1.0/2)*sum_obs**(1.0/2))
 
        #Calculate MSSS 1- MSEh/MSEo for anomalies
-        msss[i_step, :, :] = 1 - sum_ec_trmm_sq/sum_trmm
+        msss[i_step, :, :] = 1 - sum_ec_obs_sq/sum_obs
 
 
 if print_data !=0:

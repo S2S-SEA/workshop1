@@ -1,7 +1,9 @@
 ﻿'''
 This script calculates CORA for temperature using ERA interim and model data. 
 It calls the processInterim and processECMWF files to calculate the weekly anomalies. 
-Make sure you check all the conditions und
+Make sure you check all the conditional files.
+Option to print out data or plot data.  
+
 '''
 #this is calculating CORA 
 import datetime
@@ -16,8 +18,8 @@ model_initial_date = ['1013','1017','1020','1024','1027','1031','1103','1107','1
 # make sure this list matches with the files you downloaded
 weeks = [3,7,10,14,17,21,24] # these are the start dates for the weeks you are looking for. Make sure they match with the model data!
 month = 11 # this is the month you want to be looking at 
-start_year = 1998 # start year
-end_year = 2014 # end year
+start_year = 1998 
+end_year = 2014 
 lead_times = 4 # this is the number of lead time weeks 
 ec_input = '../../../../data/model/ecmwf/temp' # will need to change this path 
 
@@ -28,18 +30,16 @@ lon_left = 80
 lon_right = 150
 
 #options
-print_data=[2,14,14] # set print_data = 0 if nothing to print out, otherwise specify [lead_time, latitude location, longitude location]
-plotting = True# if True, the plots will be done and saved, no plots if False
+print_data=[1,14,14] # set print_data = 0 if nothing to print out, otherwise specify [lead_time location, latitude location, longitude location]
+plotting = False# if True, the plots will be done and saved, no plots if False
 ##-------------------------------------------------------
 #			PROCESSING
 #---------------------------------------------------------
 #check print option
 if print_data != 0:
-    if print_data[0]>= lead_times:
+    while print_data[0]>= lead_times:
         print_data[0] = input('Your lead time is out of bounds. Please enter a number between 0 and '+ str(lead_times-1))
     
-    
-
 #get the Interim data (similar to process script)
 erai_lon, erai_lat, erai_dates, erai_anom= pf.processInterim(month, weeks, start_year, end_year, 3)
 LD, LU, LL, LR, erai_lat, erai_lon = s2s.makeSmaller(erai_lat, erai_lon, lat_up, lat_down, lon_left, lon_right)
@@ -70,17 +70,16 @@ for i_step in range(lead_times):
 
         #Calculate CORA
         #this is working out the formula = sum(interimAnomaly*ecmwfAnomlay)/(sqrt(sum(interimAnomaly^2))*sqrt(sum(ecmwfAnomaly^2))
-
         cora[i_step, :, :] = sum_ec_trmm/(sum_ec**(1.0/2)*sum_trmm**(1.0/2))
 
        #Calculate MSSS 1- MSEh/MSEo for anomalies
         msss[i_step, :, :] = 1 - sum_ec_trmm_sq/sum_trmm
-        print(np.min(msss[i_step, :, :]))
+
 
 if print_data !=0:
-    print('cora value for the lead time and maximum for all lead times ')
+    print('CORA value for the lead time '+str(print_data[0]+1) +' and maximum for all lead times ')
     print(cora[print_data[0], print_data[1],print_data[-1]], np.max(cora[:, print_data[1],print_data[-1]]))
-    print('MSSS value for the lead time and maximum for all lead times')
+    print('MSSS value for the lead time '+str(print_data[0]+1) +' and maximum for all lead times')
     print(msss[print_data[0], print_data[1],print_data[-1]], np.max(msss[:, print_data[1],print_data[-1]]))
 
 #--------------------------------------------
@@ -90,9 +89,9 @@ if print_data !=0:
 if plotting: 
     for i_step in range(lead_times):    
 
-        title_str = 'Temperature MSSS' + '\n' + str(month) + ' (LT' + str(i_step) + ')'
+        title_str = 'Temperature MSSS' + '\n' + str(month) + ' (LT' + str(i_step+1) + ')'
         name_str = 'ECMWF_' + str(month) + '_LT' + str(i_step+1) + '_MSSS.png'
         s2s.plot_verification(msss[i_step, :, :],ec_lat,ec_lon,10,10,title_str,name_str,'MSSS')
-        title_str = 'Temperature CORA' + '\n' + str(month)+ ' (LT' + str(i_step) + ')'
+        title_str = 'Temperature CORA' + '\n' + str(month)+ ' (LT' + str(i_step+1) + ')'
         name_str = 'ECMWF_' + str(month) + '_LT' + str(i_step) + '_CORA.png'
         s2s.plot_verification(cora[i_step, :, :],ec_lat,ec_lon,10,10,title_str,name_str,'CORA')

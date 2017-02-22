@@ -59,7 +59,7 @@ def processInterim(month, weeks, startYear, endYear, type):
         interimType = interimAnom
     return lons, lats, dates, interimType
 
-def processEcmwfTemp(ec_input, model_initial_date, model_step ,month, weeks, startYear, endYear, type):
+def processEcmwfTemp(ec_input, model_initial_date, lead_times ,month, weeks, start_year, end_year, type):
  #Input: 
  # the path to the folder for the ec data
  #a List of all the start dates for the files (see process ECMWF code for more information)
@@ -69,49 +69,45 @@ def processEcmwfTemp(ec_input, model_initial_date, model_step ,month, weeks, sta
  #startYear/endYear : first and last year that you are looking at e.g 1998
  #if type == 1, returns the weekly absolute value, 2 == climatology value, 3 = anomaly
 
- # returns dataLon (longitude file), dataLat (latitude file), ecType (the data, either weekly, anom, or climatology)
+ # returns ec_lon (longitude file), ec_lat (latitude file), ecType (the data, either weekly, anom, or climatology)
 ##--------------------------------PROCESSING-------------------------------
 #Creating the ecWeekly file. format is [lead_time, date (based on weeks file), year, lat, lon]
 
     for i_date in range(0,len(model_initial_date)):
+        
         model_date = model_initial_date[i_date]
         cur_ec_filename = 'ECMWF_temp_2016-' + model_date[:2] + '-' + model_date[-2:] + '_weekly.nc'
-    #no interpolation needed, just need to make sure they are the right way around (which they are not)
-        dataLat, dataLon, dataTime, dataStep, ecdata= s2s.getECMWFweekly(ec_input + '/' + cur_ec_filename)
-        if i_date == 0 :        
-            # format is model step/forecast week, date, year, latitude, longitude
-            ectemp = np.empty([model_step, len(model_initial_date),endYear+1-startYear, len(dataLat), len(dataLon)])
-            ecWeekly = np.empty([model_step, len(weeks),endYear+1-startYear, len(dataLat), len(dataLon)])
-            ecAnom = np.empty([model_step, len(weeks),endYear+1-startYear,len(dataLat), len(dataLon)])
-            # format is model step/forecast week, date, latitude, longitude [ no year]
-            ecClimo = np.empty([model_step, len(weeks),len(dataLat), len(dataLon)])
-            
-        for i_step in range(model_step): 
-            ectemp[i_step, i_date, :, :, :] = ecdata[:endYear-startYear+1, i_step, :, :]
-    
-    #now creating the ecWeekly to be within the bounds
-    for date in range(len(weeks)):
-        if weeks[date] <10:
-            model_date = str(month)+str(0)+str(weeks[date])
-        else:
-            model_date = str(month)+str(weeks[date])
+        #loading the previously saved data
+        ec_lat, ec_lon, ec_time, ec_step, ec_data= s2s.getECMWFweekly(ec_input + '/' + cur_ec_filename)
+        
+        if i_date == 0  :
+            ec_weekly = np.empty([lead_times, len(weeks),end_year+1-start_year, len(ec_lat), len(ec_lon)])
+            ec_anom = np.empty([lead_times, len(weeks),end_year+1-start_year,len(ec_lat), len(ec_lon)])
+            ec_clim = np.empty([lead_times, len(weeks),len(ec_lat), len(ec_lon)])
 
-        if model_date in model_initial_date:
-                newdate = model_initial_date.index(model_date)
-                i_step = 0
-                while newdate>= 0 and i_step<model_step:             
-                    ecWeekly[i_step, date, :, :, :] = ectemp[i_step, newdate, :, :, :]
-                    ecClimo[i_step,  date, :, :] = np.mean(ectemp[i_step, newdate, :, :, :], axis = 0)
-                    ecAnom[i_step,  date, :, :] = ecWeekly[i_step, date,:, :, :] - ecClimo[i_step, date, :, :]
-                    i_step += 1
-                    newdate -= 1
+        for i_step in range(0,lead_times):
+            end_date = ec_time[0] + datetime.timedelta(hours=int(ec_step[i_step]))
+            start_date = end_date - datetime.timedelta(days=6)
 
-        else:
-            print("The date "+ model_date + " was not found in the ECWMF file. Check the model inital_date list file")
+
+        #Check if forecasted week is within the target month
+            if start_date.month == month and end_date.month == month:
+                try:
+                    i_week = weeks.index(start_date.day)
+                except:
+                    print(i_step)
+                    print("The date "+ str(start_date) + " was not found in list of weeks. Check the model inital_date list and week list")
+                ec_weekly[i_step,i_week,:,:,:] = ec_data[:end_year+1-start_year,i_step,:,:]
+
+
+        ec_clim = np.mean(ec_weekly[:, :, :, :, :], axis = 2)
+        for i_year in range(0,end_year-start_year+1):
+            ec_anom[:,:,i_year,:,:] = ec_weekly[:,:,i_year,:,:] - ec_clim
+
     if type == 1:
-        ecType = ecWeekly
+        ecType = ec_weekly
     elif type == 2:
-        ecType = ecClimo
+        ecType = ec_clim
     elif type == 3:
-        ecType = ecAnom
-    return dataLon, dataLat, ecType
+        ecType = ec_anom
+    return ec_lon, ec_lat, ecType

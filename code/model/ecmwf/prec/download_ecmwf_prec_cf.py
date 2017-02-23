@@ -22,7 +22,7 @@ dest_dir = '../../../../data/model/ecmwf/prec/'
 call("mkdir -p " + dest_dir, shell=True)
 
 # Remove all *cf.nc files, else grib_to_netcdf will convert with "protocol error"
-call("rm -rf " + dest_dir + "*_cf.nc", shell=True)
+#call("rm -rf " + dest_dir + "*_cf.nc", shell=True)
  
 # For each initial date
 for i in range(0, len(init_date)):

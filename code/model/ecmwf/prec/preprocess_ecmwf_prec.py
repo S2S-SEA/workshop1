@@ -66,46 +66,5 @@ for i_date in range(0,len(init_date)):
     #-------------------------------------
     # Define output file destination
     ucomm.save_netcdf(dest_dir,'prec',init_date[i_date],prec_lat,prec_lon,no_of_wks,prec_hd,prec_st,'kg m**-2','Total Precipitation',arr_wkly,step_start=1,step_skip=1)
-    '''
-    ds_out = netCDF4.Dataset(dest_dir + "ECMWF_prec_2016-" + init_date[i_date] + '_weekly.nc', 'w',format='NETCDF4_CLASSIC')
-
-    # Create all the required dimensions of the variable 
-    latitude = ds_out.createDimension('latitude', len(prec_lat))
-    longitude = ds_out.createDimension('longitude', len(prec_lon))
-    step = ds_out.createDimension('step', no_of_wks) 
-    time = ds_out.createDimension('time', len(prec_hd))    
-
-    # Create the variables to store the data
-    times = ds_out.createVariable('time', 'f8', ('time',)) 
-    steps = ds_out.createVariable('step', 'f4', ('step',)) 
-    latitudes = ds_out.createVariable('latitude', 'f4', ('latitude',))
-    longitudes = ds_out.createVariable('longitude', 'f4', ('longitude',)) 
-    # Create the 4-d precipitation variable
-    precip = ds_out.createVariable('prec', 'f4', ('time','step','latitude','longitude',),) 
-
-    # Define the properties of the variables
-    times.units = 'hours since 2016-' + init_date[i_date] + ' 00:00:00.0';
-    times.calendar = 'standard';
-    latitudes.units= 'degrees_north'  
-    longitudes.units= 'degrees_east'  
-    precip.units = 'kg m**-2'
-    precip.missing_value= -32767
-    precip.long_name = 'Total Precipitation'
-
-    # Format the time variable
-    prec_time = [];
-    for i in range(0,len(prec_hd)):
-        prec_time.append(datetime.datetime(year=int(str(prec_hd[i])[0:4]), month=int(str(prec_hd[i])[4:6]), day=int(str(prec_hd[i])[6:8])))
-    
-    # Populate the variables
-    latitudes[:] = prec_lat   
-    longitudes[:] = prec_lon
-    times[:] = netCDF4.date2num(prec_time, units=times.units, calendar=times.calendar);
-    steps[:] = prec_st[1::1]  
-    precip[:,:,:,:] = arr_wkly[:,:,:,:]
-
-    # File is saved to .nc once closed
-    ds_out.close()  
-    '''
     ds_pf.close()
     ds_cf.close()

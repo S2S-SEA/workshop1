@@ -1,14 +1,14 @@
 import netCDF4
 import datetime
 
-def save_netcdf(dest_dir,var_name,init_date,var_lat,var_lon,no_of_weeks,var_hd,var_st,var_units,var_longname,arr_wkly,step_start,step_skip):
+def save_netcdf(dest_dir,var_name,init_date,var_lat,var_lon,lead_times,var_hd,var_st,var_units,var_longname,arr_wkly,step_start,step_skip):
     # Define output file destination
     ds_out = netCDF4.Dataset(dest_dir + "ECMWF_" + var_name + "_2016-" + init_date + '_weekly.nc', 'w',format='NETCDF4_CLASSIC')
 
     # Create all the required dimensions of the variable 
     latitude = ds_out.createDimension('latitude', len(var_lat))
     longitude = ds_out.createDimension('longitude', len(var_lon))
-    step = ds_out.createDimension('step', no_of_weeks)
+    step = ds_out.createDimension('step', lead_times)
     time = ds_out.createDimension('time', len(var_hd))
 
     # Create the variables to store the data

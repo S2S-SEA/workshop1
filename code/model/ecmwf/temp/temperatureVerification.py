@@ -93,5 +93,5 @@ if plotting:
         name_str = 'ECMWF_' + str(month) + '_LT' + str(i_step+1) + '_MSSS.png'
         s2s.plot_verification(msss[i_step, :, :],ec_lat,ec_lon,10,10,title_str,name_str,'MSSS')
         title_str = 'Temperature CORA' + '\n' + str(month)+ ' (LT' + str(i_step+1) + ')'
-        name_str = 'ECMWF_' + str(month) + '_LT' + str(i_step) + '_CORA.png'
+        name_str = 'ECMWF_' + str(month) + '_LT' + str(i_step+1) + '_CORA.png'
         s2s.plot_verification(cora[i_step, :, :],ec_lat,ec_lon,10,10,title_str,name_str,'CORA')

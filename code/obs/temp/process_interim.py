@@ -1,4 +1,4 @@
-'''
+﻿'''
 This script processes the ERA-Interim file to produce plots of the below three datasets
 Weekly average temperature values for a partiucular set of dates (erai_weekly)
 Climotology for each of those weeks (erai_clim)
@@ -29,9 +29,9 @@ end_year = 2014
 # set print_data = 0 if nothing to print,otherwise specify [year,latitude location, longitude location]
 #Plotting:Plots saved if true. Skip if false. Check naming convention under plotting
 #Saving: True: saved as netCDF in location output_file. Check naming convention under saving
-print_data=[1998,10,23]  
-plotting = False
-saving = False 
+print_data=[2006,1,1]  
+plotting = True
+saving = False
 output_file= "../../../data/obs/" 
 
 ##--------------------------------PROCESSING-------------------------------
@@ -43,12 +43,12 @@ for year in range(start_year, end_year+1):
     lons, lats, date_list, st = s2s.getInterim(filename)
   
     if year == start_year :
-        erai_weekly = np.empty([end_year+1-start_year,len(weeks), len(lats), len(lons)])
+        erai_weekly = np.empty([len(weeks), end_year+1-start_year, len(lats), len(lons)])
 
     count = 0
     for i in weeks:       
         index = int(np.where(date_list == datetime.datetime(year, month, i, 0, 0))[0]) #find the date in the interim data
-        erai_weekly[year-start_year,count,:, :] = np.mean(st[index:index+7*4, :, :], axis = 0)#average the weekly values (4*7)
+        erai_weekly[count, year-start_year,:, :] = np.mean(st[index:index+7*4, :, :], axis = 0)#average the weekly values (4*7)
         count+= 1
 
     if print_data !=0 and year == start_year:
@@ -57,7 +57,7 @@ for year in range(start_year, end_year+1):
 
 
 #creating the climatology file (average over all the weeks with same start day)
-erai_clim = np.mean(erai_weekly, axis = 0)
+erai_clim = np.mean(erai_weekly, axis = 1)
 
 if print_data != 0 : # printing out the value for a specific location 
         print("Climatology ")
@@ -67,16 +67,16 @@ if print_data != 0 : # printing out the value for a specific location
 erai_anom = np.empty(erai_weekly.shape)
 
 for i in range(len(weeks)):
-    erai_anom[:,i,:,:] = erai_weekly[:, i, :, :] - erai_clim[i, :, :]
+    erai_anom[i, :,:,:] = erai_weekly[i, :, :, :] - erai_clim[i, :, :]
 
     if print_data != 0 : 
         while (print_data[0] < start_year) | (print_data[0] > end_year) :
             print_data[0] = round(float(input('This year is out of range. Please enter the year you would like to print: ') ))
         j = print_data[0] - start_year
         print(str(print_data[0]) +" Temperature anomaly for week " + str(i))
-        print(erai_anom[j, i, print_data[1], print_data[2]]) 
+        print(erai_anom[i, j, print_data[1], print_data[2]]) 
         print(str(print_data[0]) +" Average Temperature for week " + str(i))  
-        print(erai_weekly[j, i, print_data[1], print_data[2]]) 
+        print(erai_weekly[i, j, print_data[1], print_data[2]]) 
 ##-----------------------------------------------
 #                    PLOTTING
 #------------------------------------------------
@@ -93,17 +93,19 @@ if plotting:
     #Define title and name convention
     title_str = 'Average Temperature '+str(weeks[i])+'/11/'+str(plotYear)+', ERA Interim '
     name_str = 'erai_' +str(plotYear)+"_11_"+str(weeks[i])+'_' + 'Average'+'.png'
-    s2s.plot_figure(erai_weekly[j,i, :, :],lats,lons,[240,300],title_str,name_str,'Average')
+    s2s.plot_figure(erai_weekly[i, j, :, :],lats,lons,[240,300],title_str,name_str,'Average')
     title_str = 'Temperature Climatology '+str(weeks[i])+'/11/'+str(plotYear)+', ERA Interim '
     name_str = 'erai_' +str(plotYear)+"_11_"+str(weeks[i])+'_' + 'Climatology'+'.png'
     s2s.plot_figure(erai_clim[i, :, :],lats,lons,[240,300],title_str,name_str,'Climatology')
     title_str = 'Temperature Anomaly '+str(weeks[i])+'/11/'+str(plotYear)+', ERA Interim '
     name_str = 'erai_' +str(plotYear)+"_11_"+str(weeks[i])+'_' + 'Anomaly'+'.png'
-    s2s.plot_figure(erai_anom[j,i, :, :],lats,lons,[-3,3],title_str,name_str,'Anomaly')
+    s2s.plot_figure(erai_anom[i, j, :, :],lats,lons,[-3,3],title_str,name_str,'Anomaly')
+    
 
 ##------------------------------------------------
 #		SAVING
 #-------------------------------------------------
+
 if saving:
 # here we save the data to the specified location output_file, with the name int_filename)
     int_filename = 'ERAInt_Month_' + str(month) + '_Anomaly_Weekly.nc'
@@ -112,3 +114,4 @@ if saving:
     s2s.writeInterim(output_file,int_filename,erai_weekly,range(0,len(weeks)),range(start_year,end_year+1),lats,lons,'Average')
     int_filename = 'ERAInt_Month_' + str(month) + '_Climatology_Weekly.nc'
     s2s.writeInterim(output_file,int_filename,erai_clim,range(0,len(weeks)),range(start_year,end_year+1),lats,lons,'Climatology')
+

@@ -1,4 +1,4 @@
-#these are the basic functions for my scripts!
+﻿#these are the basic functions for my scripts!
 #those for the plots
 import matplotlib as mpl
 mpl.use('Agg')
@@ -76,7 +76,8 @@ def plot_figure(data_0,lat_0,lon_0,dataLimit, title_str, name_str, index):
     #index = Climatology, Anomaly, Average - one of these three (will alter the title)
 ## Return data information:
     # No data is return. Only one file is saved
-
+    lat_0 = lat_0- 0.5*(lat_0[1]-lat_0[0])
+    lon_0 = lon_0- 0.5*(lon_0[1]-lon_0[0])
     #Caculate borders for the domain
     latcorners = [lat_0.min(),lat_0.max()]
     loncorners = [lon_0.min(),lon_0.max()]

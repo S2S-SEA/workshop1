@@ -164,6 +164,8 @@ def plot_processing(data_0,lat_0,lon_0,lat_down,lat_up,lon_left,lon_right,grid_l
 
     #Find borders of the domain
     L1,R1,L2,R2 = find_point(lat_0,lon_0,lat_down,lat_up,lon_left,lon_right)
+    lat_0 = lat_0 - 0.5*(lat_0[1]-lat_0[0])
+    lon_0 = lon_0 - 0.5*(lon_0[1]-lon_0[0])
     lat = lat_0[L1:R1+1]
     lon = lon_0[L2:R2+1]
     latcorners = [lat.min(),lat.max()]
@@ -184,7 +186,7 @@ def plot_processing(data_0,lat_0,lon_0,lat_down,lat_up,lon_left,lon_right,grid_l
     m.drawmeridians(meridians,labels=[0,0,0,1],fontsize=12)
 
     #Compute map proj coordinates
-    data = data_0[L1:R1,L2:R2]
+    data = data_0[L1:R1+1,L2:R2+1]
     ny = data.shape[0]
     nx = data.shape[1]
     lons,lats = m.makegrid(nx,ny)
@@ -213,6 +215,8 @@ def plot_verification(data_0,lat_0,lon_0,lat_down,lat_up,lon_left,lon_right,grid
 
     #Find borders of the domain
     L1,R1,L2,R2 = find_point(lat_0,lon_0,lat_down,lat_up,lon_left,lon_right)
+    lat_0 = lat_0 - 0.5*(lat_0[1]-lat_0[0])
+    lon_0 = lon_0 - 0.5*(lon_0[1]-lon_0[0])
     lat = lat_0[L1:R1+1]
     lon = lon_0[L2:R2+1]
     latcorners = [lat.min(),lat.max()]
@@ -233,7 +237,7 @@ def plot_verification(data_0,lat_0,lon_0,lat_down,lat_up,lon_left,lon_right,grid
     m.drawmeridians(meridians,labels=[0,0,0,1],fontsize=12)
 
     #Compute map proj coordinates
-    data = data_0[L1:R1,L2:R2]
+    data = data_0[L1:R1+1,L2:R2+1]
     ny = data.shape[0]
     nx = data.shape[1]
     lons,lats = m.makegrid(nx,ny)

@@ -18,7 +18,7 @@ import s2s_utils_comm as ucomm
 
 # Define data folder
 dest_dir = '../../../../data/model/ecmwf/prec/'
-no_of_wks = 4
+lead_times = 4
 
 # All the initial dates with complete 7-day week in Nov for the 2016 runs
 init_date = ['10-13','10-17','10-20','10-24','10-27','10-31','11-03','11-07','11-10','11-14','11-17','11-21','11-24']
@@ -65,6 +65,6 @@ for i_date in range(0,len(init_date)):
     # Output variable to netCDF
     #-------------------------------------
     # Define output file destination
-    ucomm.save_netcdf(dest_dir,'prec',init_date[i_date],prec_lat,prec_lon,no_of_wks,prec_hd,prec_st,'kg m**-2','Total Precipitation',arr_wkly,step_start=1,step_skip=1)
+    ucomm.save_netcdf(dest_dir,'prec',init_date[i_date],prec_lat,prec_lon,lead_times,prec_hd,prec_st,'kg m**-2','Total Precipitation',arr_wkly,step_start=1,step_skip=1)
     ds_pf.close()
     ds_cf.close()

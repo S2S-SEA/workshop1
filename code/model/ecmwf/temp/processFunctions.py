@@ -56,7 +56,7 @@ def processInterim(month, weeks, startYear, endYear, type):
             count+= 1
             dates.append(datetime.datetime(year, month, i, 0, 0))
 #creating the climatology file (average over all the weeks with same start day)
-    interimClimo = np.mean(interimWeekly, axis = 0)
+    interimClimo = np.mean(interimWeekly, axis = 1)
 
 
 # Creating the weekly temperature anomaly, same format as the interimWeekly file

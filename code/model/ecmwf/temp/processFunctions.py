@@ -13,7 +13,7 @@ import datetime
 import numpy as np
 import s2s_utilities_temp as s2s
 import sys 
-
+import os
 
 def processInterim(month, weeks, startYear, endYear, type):
  #Input: 
@@ -25,12 +25,24 @@ def processInterim(month, weeks, startYear, endYear, type):
  #if type == 1, returns the weekly absolute value, 2 == climatology value, 3 = anomaly
     startfile= "../../../.."
     file = "/data/obs/temp/erai_temp_6hr_"
+    file2 = "/data/obs/temp/interim_temp_6hr_"
+    filename = startfile+file+str(startYear)+".nc"
+    filename2 = startfile+file2+str(startYear)+".nc"
+    if os.path.exists(filename):
+        print('Found file ' +filename)
+    elif os.path.exists(filename2):
+        print('Found file ' +filename2)
+        file = file2
+    else:
+        print('Cannot find the ERA-Interim file')
+        sys.exit()
 
 ##--------------------------------PROCESSING-------------------------------
 #Creating the interimWeekly file. format is [year, week (based on weeks file), lat, lon]
 
     for year in range(startYear, endYear+1):
         filename = startfile+file+str(year)+".nc"
+	
         lons, lats, dateList, t2m = s2s.getInterim(filename)
   
         if year == startYear :
@@ -44,7 +56,7 @@ def processInterim(month, weeks, startYear, endYear, type):
             count+= 1
             dates.append(datetime.datetime(year, month, i, 0, 0))
 #creating the climatology file (average over all the weeks with same start day)
-    interimClimo = np.mean(interimWeekly, axis = 0)
+    interimClimo = np.mean(interimWeekly, axis = 1)
 
 
 # Creating the weekly temperature anomaly, same format as the interimWeekly file
